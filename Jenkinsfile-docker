@@ -14,7 +14,7 @@ pipeline {
                 sh './gradlew test'
             }
         }
-        stege('Build Docker image') {
+        stage('Build Docker image') {
             steps {
                 sh './gradlew docker'
             }
