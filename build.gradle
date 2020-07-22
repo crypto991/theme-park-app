@@ -5,6 +5,7 @@ plugins {
     id 'pl.allegro.tech.build.axion-release' version '1.10.1'
     id 'com.palantir.docker' version '0.25.0'
     id 'com.palantir.docker-run' version '0.25.0'
+    id 'jp.classmethod.aws.cloudformation' version '0.41'
 }
 
 group = 'com.djordje'
@@ -39,8 +40,8 @@ test {
     useJUnitPlatform()
 }
 
-
-String imageName = "crypto2110/theme-park-app:$version"
+String dockerHubUsernameProperty = findProperty('dockerHubUsername') ?: 'crypto2110'
+String imageName = "${dockerHubUsernameProperty}/theme-park-app:$version"
 
 docker {
     name imageName
@@ -53,4 +54,15 @@ dockerRun {
     image imageName
     ports '8080:8080'
     clean true
+}
+
+cloudFormation {
+    stackName = "$project.name-stack"
+    stackParams([
+            SubnetID: findProperty('subnetId') ?: '',
+            ServiceName: project.name,
+            ServiceVersion: project.version,
+            DockerHubUsername: dockerHubUsernameProperty
+    ])
+    templateFile project.file(ecs.yml)
 }
