@@ -56,13 +56,17 @@ dockerRun {
     clean true
 }
 
+aws {
+    region = findProperty('region') ?: 'eu-central-1'
+}
+
 cloudFormation {
-    stackName = "$project.name-stack"
+    stackName "$project.name-stack"
     stackParams([
             SubnetID: findProperty('subnetId') ?: '',
             ServiceName: project.name,
             ServiceVersion: project.version,
             DockerHubUsername: dockerHubUsernameProperty
     ])
-    templateFile project.file(ecs.yml)
+    templateFile project.file("ecs.yml")
 }
