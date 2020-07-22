@@ -40,7 +40,7 @@ test {
 }
 
 
-String imageName = "djordje/theme-park-app:$version"
+String imageName = "crypto2110/theme-park-app:$version"
 
 docker {
     name imageName
